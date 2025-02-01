@@ -1,0 +1,9 @@
+{
+    "gateway_url": "http://localhost:42069/api/v1/gateway/",
+    "gateway_namespace": "/",
+    "device_id": "<my device's uuidv4>",
+    "secret": "<my device's secret>",
+    "log_level": "NORMAL",
+    "reconn_delay": 3000,
+    "reconn_attempts": 3
+}
