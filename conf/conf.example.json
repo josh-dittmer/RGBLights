@@ -1,4 +1,5 @@
 {
+    "driver": "TEST",
     "gateway_url": "https://api.hc.jditt.me/api/v1/gateway/",
     "gateway_namespace": "/",
     "device_id": "<my device's uuidv4>",
