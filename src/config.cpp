@@ -27,6 +27,7 @@ bool Config::load(const std::string& path) {
     }
 
     try {
+        m_values.m_driver = read_str(doc, "driver");
         m_values.m_gateway_url = read_str(doc, "gateway_url");
         m_values.m_gateway_namespace = read_str(doc, "gateway_namespace");
         m_values.m_device_id = read_str(doc, "device_id");

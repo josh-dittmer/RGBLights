@@ -1,5 +1,5 @@
 {
-    "gateway_url": "http://localhost:42069/api/v1/gateway/",
+    "gateway_url": "https://api.hc.jditt.me/api/v1/gateway/",
     "gateway_namespace": "/",
     "device_id": "<my device's uuidv4>",
     "secret": "<my device's secret>",

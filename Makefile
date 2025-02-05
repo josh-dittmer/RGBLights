@@ -11,11 +11,24 @@ OBJECTDIR = $(BINARYDIR)/obj
 
 TARGET = $(BINARYDIR)/rgb_lights
 
+LIB_DIR += 
+
 LIBS += -lpthread
 LIBS += -latomic
-LIBS += -lsioclient
+LIBS += -lsioclient_tls
+LIBS += -lssl
+LIBS += -lcrypto
 LIBS += -lhomecontroller
 LIBS += -lpigpio
+
+# drivers
+_HEADERS += drivers/driver.h
+
+_OBJECTS += drivers/pwm_driver.o
+_HEADERS += drivers/pwm_driver.h
+
+_OBJECTS += drivers/test_driver.o
+_HEADERS += drivers/test_driver.h
 
 # programs
 _OBJECTS += programs/default_program.o

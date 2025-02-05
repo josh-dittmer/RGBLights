@@ -4,6 +4,7 @@
 #include <homecontroller/api/device_data/rgb_lights.h>
 
 #include "config.h"
+#include "drivers/driver.h"
 #include "programs/program.h"
 
 #include <condition_variable>
@@ -27,6 +28,8 @@ class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
                    bool update_on_server = true);
 
   private:
+    bool init_driver(const std::string& driver_name);
+
     void loop();
 
     void on_command_received(
@@ -48,6 +51,8 @@ class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
     void reset_program(hc::api::rgb_lights::State::Program program);
 
     Config m_config;
+
+    std::unique_ptr<Driver> m_driver;
 
     std::unique_ptr<Program> m_program_ptr;
 

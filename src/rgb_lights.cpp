@@ -1,5 +1,7 @@
 #include "rgb_lights.h"
 
+#include "drivers/pwm_driver.h"
+#include "drivers/test_driver.h"
 #include "programs/default_program.h"
 #include "programs/rainbow_fade_program.h"
 
@@ -19,6 +21,10 @@ bool RGBLights::init(const CommandLineArgs& args) {
         get_logger(), m_config.get_log_level_str()));
 
     m_config.print();
+
+    if (!init_driver(m_config.get_driver())) {
+        return false;
+    }
 
     get_logger().verbose("Initialization finished!");
 
@@ -62,6 +68,8 @@ bool RGBLights::init(const CommandLineArgs& args) {
     // shutdown sequence
     get_logger().verbose("Shutting down...");
 
+    m_driver->shutdown();
+
     return true;
 }
 
@@ -82,7 +90,30 @@ void RGBLights::set_color(uint8_t r, uint8_t g, uint8_t b,
         update_state(new_state);
     }
 
-    // update pwm
+    m_driver->write(r, g, b);
+}
+
+bool RGBLights::init_driver(const std::string& driver_name) {
+    static std::map<std::string, std::function<Driver*()>> str_to_driver = {
+        {"TEST", []() { return new TestDriver(); }},
+        {"PWM", []() { return new PWMDriver(); }}};
+
+    auto mit = str_to_driver.find(driver_name);
+    if (mit == str_to_driver.end()) {
+        get_logger().error("Unknown driver \"" + driver_name + "\" specified!");
+        return false;
+    }
+
+    m_driver.reset(mit->second());
+
+    get_logger().verbose("Starting driver \"" + driver_name + "\"...");
+
+    if (!m_driver->init()) {
+        get_logger().error("Failed to start driver \"" + driver_name + "\"!");
+        return false;
+    }
+
+    return true;
 }
 
 void RGBLights::loop() {

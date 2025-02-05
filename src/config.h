@@ -7,6 +7,7 @@
 class Config {
   public:
     struct Values {
+        std::string m_driver;
         std::string m_gateway_url;
         std::string m_gateway_namespace;
         std::string m_device_id;
@@ -25,6 +26,7 @@ class Config {
 
     const Values& get_values() { return m_values; }
 
+    const std::string& get_driver() { return m_values.m_driver; }
     const std::string& get_gateway_url() { return m_values.m_gateway_url; }
     const std::string& get_gateway_namespace() {
         return m_values.m_gateway_namespace;
