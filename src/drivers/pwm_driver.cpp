@@ -39,8 +39,6 @@ void PWMDriver::write(uint8_t r, uint8_t g, uint8_t b) {
         return;
     }
 
-    get_logger().verbose("test");
-
     gpioPWM(PWM_PIN_R, r);
     gpioPWM(PWM_PIN_G, g);
     gpioPWM(PWM_PIN_B, b);

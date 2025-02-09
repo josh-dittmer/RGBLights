@@ -15,7 +15,7 @@ LIB_DIR +=
 
 LIBS += -lpthread
 LIBS += -latomic
-LIBS += -lsioclient_tls
+LIBS += -lsioclient
 LIBS += -lssl
 LIBS += -lcrypto
 LIBS += -lhomecontroller
