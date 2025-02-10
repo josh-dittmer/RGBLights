@@ -13,9 +13,14 @@ TARGET = $(BINARYDIR)/rgb_lights
 
 LIB_DIR += 
 
+ifeq ($(ENV), prod)
+	LIBS += -lsioclient_tls
+else
+	LIBS += -lsioclient
+endif
+
 LIBS += -lpthread
 LIBS += -latomic
-LIBS += -lsioclient
 LIBS += -lssl
 LIBS += -lcrypto
 LIBS += -lhomecontroller
