@@ -51,7 +51,7 @@ bool ZenggeDriver::set_adapter_property(std::string property, GVariant* value) {
     res_ptr.reset(g_dbus_connection_call_sync(
         m_dbus_conn_ptr.get(), BUS_NAME.c_str(), ADAPTER_PATH.c_str(),
         "org.freedesktop.DBus.Properties", "Set",
-        g_variant_new("(ssv)", INTERFACE_NAME.c_str(), property, value),
+        g_variant_new("(ssv)", INTERFACE_NAME.c_str(), property.c_str(), value),
         nullptr, G_DBUS_CALL_FLAGS_NONE, -1, nullptr, &err));
 
     if (err != nullptr) {
