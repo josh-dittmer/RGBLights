@@ -24,6 +24,10 @@ class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
 
     void shutdown();
 
+    void set_init_finished_cb(std::function<void()> init_finished_cb) {
+        m_init_finished_cb = init_finished_cb;
+    }
+
     void set_color(uint8_t r, uint8_t g, uint8_t b,
                    bool update_on_server = true);
 
@@ -49,6 +53,8 @@ class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
     void handle_stop_program(hc::api::rgb_lights::State& state);
 
     void reset_program(hc::api::rgb_lights::State::Program program);
+
+    std::function<void()> m_init_finished_cb;
 
     Config m_config;
 

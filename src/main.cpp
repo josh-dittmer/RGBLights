@@ -40,7 +40,8 @@ RGBLights::CommandLineArgs get_args(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
-    std::signal(SIGINT, [](int s) { r.shutdown(); });
+    r.set_init_finished_cb(
+        []() { std::signal(SIGINT, [](int s) { r.shutdown(); }); });
 
     // overwritten later by value set in config
     hc::util::Logger::set_log_level(hc::util::Logger::LogLevel::NORMAL);

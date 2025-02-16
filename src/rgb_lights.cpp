@@ -9,6 +9,7 @@
 #include <homecontroller/socket.io/client.h>
 
 #include <chrono>
+#include <csignal>
 #include <iostream>
 #include <thread>
 
@@ -25,6 +26,10 @@ bool RGBLights::init(const CommandLineArgs& args) {
 
     if (!init_driver(m_config.get_driver())) {
         return false;
+    }
+
+    if (m_init_finished_cb) {
+        m_init_finished_cb();
     }
 
     get_logger().verbose("Initialization finished!");
