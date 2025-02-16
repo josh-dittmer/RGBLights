@@ -19,15 +19,30 @@ bool ZenggeDriver::init() {
         return false;
     }
 
-    GMainLoop* main_loop_ptr = g_main_loop_new(nullptr, false);
-    g_main_loop_run(main_loop_ptr);
+    m_g_loop_ptr.reset(g_main_loop_new(nullptr, false));
+    m_loop_thread = std::thread([&]() { g_main_loop_run(m_g_loop_ptr.get()); });
 
     return true;
 }
 
 void ZenggeDriver::write(uint8_t r, uint8_t g, uint8_t b) {}
 
-void ZenggeDriver::shutdown() {}
+void ZenggeDriver::shutdown() {
+    g_main_loop_quit(m_g_loop_ptr.get());
+
+    get_logger().verbose("Waiting for event loop to quit...");
+
+    if (m_loop_thread.joinable()) {
+        m_loop_thread.join();
+    }
+
+    get_logger().verbose("Event loop has quit!");
+
+    m_g_loop_ptr.reset();
+    m_dbus_conn_ptr.reset();
+
+    get_logger().log("Driver shutdown successfully!");
+}
 
 bool ZenggeDriver::set_adapter_property(std::string property, GVariant* value) {
     GError* err = nullptr;
