@@ -2,6 +2,7 @@
 
 #include "drivers/pwm_driver.h"
 #include "drivers/test_driver.h"
+#include "drivers/zengge_driver.h"
 #include "programs/default_program.h"
 #include "programs/rainbow_fade_program.h"
 
@@ -96,7 +97,8 @@ void RGBLights::set_color(uint8_t r, uint8_t g, uint8_t b,
 bool RGBLights::init_driver(const std::string& driver_name) {
     static std::map<std::string, std::function<Driver*()>> str_to_driver = {
         {"TEST", []() { return new TestDriver(); }},
-        {"PWM", []() { return new PWMDriver(); }}};
+        {"PWM", []() { return new PWMDriver(); }},
+        {"ZENGGE", []() { return new ZenggeDriver(); }}};
 
     auto mit = str_to_driver.find(driver_name);
     if (mit == str_to_driver.end()) {
