@@ -9,6 +9,8 @@ bool ZenggeDriver::init() {
         return false;
     }
 
+    // test
+
     get_logger().verbose("Successfully connected to system bus!");
 
     return true;
