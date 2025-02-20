@@ -148,14 +148,13 @@ void ZenggeDriver::device_appear_cb(GDBusConnection* dbus_conn,
         "device_appear_cb(): Device appeared on adapter " +
         std::string(arg0_str));
 
-    g_unique_ptr<GVariant> interfaces_and_properties_variant_ptr;
-    interfaces_and_properties_variant_ptr.reset(
+    g_unique_ptr<GVariant> interfaces_and_properties_variant_ptr(
         g_variant_get_child_value(params, 1));
 
     GVariant* properties_variant_raw_ptr = nullptr;
     if (g_variant_lookup(interfaces_and_properties_variant_ptr.get(),
-                         "org.bluez.Device1", "@a{sv}"),
-        &properties_variant_raw_ptr) {
+                         "org.bluez.Device1", "@a{sv}",
+                         &properties_variant_raw_ptr)) {
         g_unique_ptr<GVariant> properties_variant_ptr(
             properties_variant_raw_ptr);
 
