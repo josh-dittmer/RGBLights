@@ -2,8 +2,10 @@
 
 #include <gio/gio.h>
 
+#include <functional>
 #include <memory>
 #include <thread>
+#include <vector>
 
 #include "driver.h"
 
@@ -61,9 +63,17 @@ class ZenggeDriver : public Driver {
 
     bool set_adapter_property(std::string property, GVariant* value);
 
+    bool call_adapter_method(std::string method,
+                             g_unique_ptr<GVariant> params_ptr,
+                             GAsyncReadyCallback callback);
+
+    void remove_signals();
+
     std::thread m_loop_thread;
 
     g_unique_ptr<GDBusConnection> m_dbus_conn_ptr;
 
     g_unique_ptr<GMainLoop> m_g_loop_ptr;
+
+    std::vector<guint> m_signal_ids;
 };
