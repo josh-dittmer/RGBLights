@@ -5,7 +5,7 @@
 
 const std::string ZenggeDriver::BUS_NAME = "org.bluez";
 const std::string ZenggeDriver::ADAPTER_PATH = "/org/bluez/hci0";
-const std::string ZenggeDriver::DEVICE_ADDRESS = "08:65:F0:20:92:94";
+const std::string ZenggeDriver::DEVICE_ADDRESS = "08:65:F0:68:2C:92";
 const int ZenggeDriver::CONNECT_TIMEOUT = 10000;
 
 bool ZenggeDriver::init() {
