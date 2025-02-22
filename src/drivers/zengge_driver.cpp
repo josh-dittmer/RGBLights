@@ -6,7 +6,7 @@
 const std::string ZenggeDriver::BUS_NAME = "org.bluez";
 const std::string ZenggeDriver::ADAPTER_PATH = "/org/bluez/hci0";
 const std::string ZenggeDriver::DEVICE_ADDRESS = "08:65:F0:20:92:94";
-const int ZenggeDriver::CONNECT_TIMEOUT = 5000;
+const int ZenggeDriver::CONNECT_TIMEOUT = 10000;
 
 bool ZenggeDriver::init() {
     m_dbus_conn_ptr.reset(g_bus_get_sync(G_BUS_TYPE_SYSTEM, nullptr, nullptr));
@@ -187,11 +187,10 @@ void ZenggeDriver::device_appear_cb(GDBusConnection* dbus_conn,
                 ? g_variant_get_string(addr_variant_ptr.get(), nullptr)
                 : "unknown");
 
-        if (addr == ZenggeDriver::DEVICE_ADDRESS) {
-            instance->get_logger().verbose("device_appear_cb(): Name: " + name);
-            instance->get_logger().verbose("device_appear_cb(): Address: " +
-                                           addr);
+        instance->get_logger().verbose("device_appear_cb(): Found " + name +
+                                       " [" + addr + "]");
 
+        if (addr == ZenggeDriver::DEVICE_ADDRESS) {
             instance->get_logger().verbose(
                 "device_appear_cb(): Found device with matching address! "
                 "Connecting...");
