@@ -155,82 +155,72 @@ void ZenggeDriver::device_appear_cb(GDBusConnection* dbus_conn,
     assert(user_data != nullptr);
     ZenggeDriver* instance = static_cast<ZenggeDriver*>(user_data);
 
-    // instance->get_logger().verbose(
-        "device_appear_cb(): Device appear callback invoked");
+    g_unique_ptr<GVariant> arg0_variant_ptr(
+        g_variant_get_child_value(params, 0));
 
-        g_unique_ptr<GVariant> arg0_variant_ptr(
-            g_variant_get_child_value(params, 0));
+    const gchar* arg0_str =
+        g_variant_get_string(arg0_variant_ptr.get(), nullptr);
 
-        const gchar* arg0_str =
-            g_variant_get_string(arg0_variant_ptr.get(), nullptr);
+    g_unique_ptr<GVariant> interfaces_and_properties_variant_ptr(
+        g_variant_get_child_value(params, 1));
 
-        // instance->get_logger().verbose(
-        "device_appear_cb(): Device appeared on adapter " +
-        std::string(arg0_str));
+    GVariant* properties_variant_raw_ptr = nullptr;
+    if (g_variant_lookup(interfaces_and_properties_variant_ptr.get(),
+                         "org.bluez.Device1", "@a{sv}",
+                         &properties_variant_raw_ptr)) {
+        g_unique_ptr<GVariant> properties_variant_ptr(
+            properties_variant_raw_ptr);
 
-        g_unique_ptr<GVariant> interfaces_and_properties_variant_ptr(
-            g_variant_get_child_value(params, 1));
+        g_unique_ptr<GVariant> name_variant_ptr(g_variant_lookup_value(
+            properties_variant_ptr.get(), "Name", nullptr));
 
-        GVariant* properties_variant_raw_ptr = nullptr;
-        if (g_variant_lookup(interfaces_and_properties_variant_ptr.get(),
-                             "org.bluez.Device1", "@a{sv}",
-                             &properties_variant_raw_ptr)) {
-            g_unique_ptr<GVariant> properties_variant_ptr(
-                properties_variant_raw_ptr);
+        const std::string name(
+            name_variant_ptr
+                ? g_variant_get_string(name_variant_ptr.get(), nullptr)
+                : "unknown");
 
-            g_unique_ptr<GVariant> name_variant_ptr(g_variant_lookup_value(
-                properties_variant_ptr.get(), "Name", nullptr));
+        g_unique_ptr<GVariant> addr_variant_ptr(g_variant_lookup_value(
+            properties_variant_ptr.get(), "Address", nullptr));
 
-            const std::string name(
-                name_variant_ptr
-                    ? g_variant_get_string(name_variant_ptr.get(), nullptr)
-                    : "unknown");
+        const std::string addr(
+            addr_variant_ptr
+                ? g_variant_get_string(addr_variant_ptr.get(), nullptr)
+                : "unknown");
 
-            g_unique_ptr<GVariant> addr_variant_ptr(g_variant_lookup_value(
-                properties_variant_ptr.get(), "Address", nullptr));
+        if (addr == ZenggeDriver::DEVICE_ADDRESS) {
+            instance->get_logger().verbose("device_appear_cb(): Name: " + name);
+            instance->get_logger().verbose("device_appear_cb(): Address: " +
+                                           addr);
 
-            const std::string addr(
-                addr_variant_ptr
-                    ? g_variant_get_string(addr_variant_ptr.get(), nullptr)
-                    : "unknown");
+            instance->get_logger().verbose(
+                "device_appear_cb(): Found device with matching address! "
+                "Connecting...");
 
-            if (addr == ZenggeDriver::DEVICE_ADDRESS) {
-                instance->get_logger().verbose("device_appear_cb(): Name: " +
-                                               name);
-                instance->get_logger().verbose("device_appear_cb(): Address: " +
-                                               addr);
+            instance->get_logger().verbose("device_appear_cb(): Invoking BlueZ "
+                                           "connect method...");
+            if (!instance->call_device_method(
+                    "Connect", nullptr,
+                    [](GObject* dbus_conn, GAsyncResult* result,
+                       gpointer user_data) {
+                        assert(user_data != nullptr);
+                        ZenggeDriver* instance =
+                            static_cast<ZenggeDriver*>(user_data);
 
+                        std::unique_lock<std::mutex> lock(instance->m_mutex);
+
+                        instance->get_logger().verbose(
+                            "device_appear_cb(): Connection method "
+                            "finished! "
+                            "Notifying...");
+
+                        instance->m_device_connected = true;
+                        instance->m_cv.notify_all();
+                    })) {
                 instance->get_logger().verbose(
-                    "device_appear_cb(): Found device with matching address! "
-                    "Connecting...");
-
-                instance->get_logger().verbose(
-                    "device_appear_cb(): Invoking BlueZ "
-                    "connect method...");
-                if (!instance->call_device_method(
-                        "Connect", nullptr,
-                        [](GObject* dbus_conn, GAsyncResult* result,
-                           gpointer user_data) {
-                            assert(user_data != nullptr);
-                            ZenggeDriver* instance =
-                                static_cast<ZenggeDriver*>(user_data);
-
-                            std::unique_lock<std::mutex> lock(
-                                instance->m_mutex);
-
-                            instance->get_logger().verbose(
-                                "device_appear_cb(): Connection method "
-                                "finished! "
-                                "Notifying...");
-
-                            instance->m_device_connected = true;
-                            instance->m_cv.notify_all();
-                        })) {
-                    instance->get_logger().verbose(
-                        "device_appear_cb(): Connection failed!");
-                }
+                    "device_appear_cb(): Connection failed!");
             }
         }
+    }
 }
 
 void ZenggeDriver::device_disappear_cb(GDBusConnection* dbus_conn,
