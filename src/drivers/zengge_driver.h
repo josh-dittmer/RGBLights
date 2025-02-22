@@ -79,6 +79,10 @@ class ZenggeDriver : public Driver {
                             g_unique_ptr<GVariant> params_ptr,
                             GAsyncReadyCallback callback);
 
+    bool set_gatt_characteristic(const std::string& service,
+                                 const std::string& characteristic,
+                                 const std::vector<uint8_t>& value);
+
     void remove_signals();
 
     std::thread m_loop_thread;

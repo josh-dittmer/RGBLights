@@ -60,6 +60,11 @@ bool ZenggeDriver::init() {
         }
     }
 
+    get_logger().verbose("init(): Testing set GATT characteristic...");
+    std::vector<uint8_t> payload = {0x56, 0xFF, 0x00, 0x00, 0x00, 0xF0, 0xAA};
+
+    set_gatt_characteristic("00", "FFE9", payload);
+
     get_logger().verbose("init(): Initialization complete!");
 
     return true;
@@ -124,10 +129,9 @@ void ZenggeDriver::adapter_change_cb(GDBusConnection* dbus_conn,
         const bool scanning =
             g_variant_get_boolean(discovering_variant_ptr.get());
 
-        instance->get_logger().log("Bluetooth adapter change: Adapter is " +
-                                           scanning
-                                       ? "now scanning"
-                                       : "no longer scanning");
+        instance->get_logger().log(
+            "Bluetooth adapter change: Adapter is " +
+            std::string(scanning ? "now scanning" : "no longer scanning"));
     }
 
     if (powered_variant_ptr) {
@@ -284,6 +288,20 @@ bool ZenggeDriver::call_device_method(const std::string& method,
 
     return call_dbus_method(path, "org.bluez.Device1", method,
                             std::move(params_ptr), callback);
+}
+
+bool ZenggeDriver::set_gatt_characteristic(const std::string& service,
+                                           const std::string& characteristic,
+                                           const std::vector<uint8_t>& value) {
+    std::string formatted_addr = DEVICE_ADDRESS;
+    std::replace(formatted_addr.begin(), formatted_addr.end(), ':', '_');
+    const std::string path = ADAPTER_PATH + "/" + "dev_" + formatted_addr +
+                             "/service" + service + "/char" + characteristic;
+
+    g_unique_ptr<GVariant> params_ptr(g_variant_new("ay", &value[0]));
+
+    return call_dbus_method(path, "org.bluez.GattCharacteristic1", "WriteValue",
+                            std::move(params_ptr), nullptr);
 }
 
 void ZenggeDriver::remove_signals() {
