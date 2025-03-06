@@ -11,6 +11,10 @@ bool ZenggeDriver::init() {
     std::shared_ptr<hc::bt::Device> device =
         m_bz_conn.get_device(DEVICE_ADDRESS);
 
+    if (!device) {
+        return false;
+    }
+
     return true;
 }
 
