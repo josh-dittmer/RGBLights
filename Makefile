@@ -25,7 +25,7 @@ LIBS += -lssl
 LIBS += -lcrypto
 LIBS += -lhomecontroller
 LIBS += -lpigpio
-LIBS += $(shell pkg-config --libs gio-2.0)
+LIBS += $(shell pkg-config --libs sdbus-c++)
 
 # drivers
 _HEADERS += drivers/driver.h
