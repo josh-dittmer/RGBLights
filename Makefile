@@ -74,6 +74,9 @@ $(OBJECTDIR):
 	mkdir -p $(OBJECTDIR)
 	mkdir -p $(addprefix $(OBJECTDIR)/,$(STRUCTURE))
 
+relink: $(OBJECTS)
+	$(CXX) -o $(TARGET) $^ $(CXXFLAGS) $(LIBS)
+
 clean:
 	rm -rf bin
 
