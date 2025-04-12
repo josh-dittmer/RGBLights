@@ -2,22 +2,28 @@
 
 #include <algorithm>
 #include <cassert>
-
-const std::string ZenggeDriver::DEVICE_ADDRESS = "08:65:F0:68:2C:92";
+#include <iostream>
 
 bool ZenggeDriver::init() {
-    m_bz_conn.start();
+    std::set<std::string> addresses = {m_address};
 
-    std::shared_ptr<hc::bt::Device> device =
-        m_bz_conn.get_device(DEVICE_ADDRESS);
-
-    if (!device) {
-        return false;
-    }
+    m_scanner.start(addresses);
 
     return true;
 }
 
-void ZenggeDriver::write(uint8_t r, uint8_t g, uint8_t b) {}
+void ZenggeDriver::write(uint8_t r, uint8_t g, uint8_t b) {
+    // std::cout << "ENTER" << std::endl;
+    std::shared_ptr<hc::bt::Connection> conn_ptr =
+        m_scanner.get_connection(m_address);
+    // std::cout << "EXIT" << std::endl;
 
-void ZenggeDriver::shutdown() {}
+    if (!conn_ptr) {
+        get_logger().verbose("Write failed, BLE connection not established");
+        return;
+    }
+
+    conn_ptr->enqueue_char_write(10);
+}
+
+void ZenggeDriver::shutdown() { m_scanner.await_finish_and_cleanup(); }

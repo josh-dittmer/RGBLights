@@ -1,20 +1,22 @@
 #pragma once
 
-#include <homecontroller/bt/bluez_connection.h>
+#include <homecontroller/bt/scanner.h>
 
 #include "driver.h"
 
 class ZenggeDriver : public Driver {
   public:
-    ZenggeDriver() : Driver("ZenggeDriver") {}
+    ZenggeDriver(const std::string& address)
+        : Driver("ZenggeDriver"), m_address(address) {}
     ~ZenggeDriver() {}
 
     bool init() override;
     void write(uint8_t r, uint8_t g, uint8_t b) override;
+
     void shutdown() override;
 
   private:
-    static const std::string DEVICE_ADDRESS;
+    hc::bt::Scanner m_scanner;
 
-    hc::bt::BlueZConnection m_bz_conn;
+    std::string m_address;
 };

@@ -25,7 +25,7 @@ LIBS += -lssl
 LIBS += -lcrypto
 LIBS += -lhomecontroller
 LIBS += -lpigpio
-LIBS += $(shell pkg-config --libs sdbus-c++)
+LIBS += $(shell pkg-config --libs gattlib)
 
 # drivers
 _HEADERS += drivers/driver.h
