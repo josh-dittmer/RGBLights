@@ -17,7 +17,9 @@ class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
         std::string m_config_path;
     };
 
-    RGBLights() : Device("RGBLights"), m_loop_needs_reset(false) {}
+    RGBLights()
+        : Device("RGBLights"), m_loop_needs_reset(false),
+          m_shutting_down(false) {}
     ~RGBLights() {}
 
     bool init(const CommandLineArgs& args);
@@ -67,6 +69,8 @@ class RGBLights : public hc::api::Device<hc::api::rgb_lights::State> {
 
     std::condition_variable m_cv_loop;
     bool m_loop_needs_reset;
+
+    bool m_shutting_down;
 
     // storage for powering on/off
     hc::api::rgb_lights::State::Program m_last_program;

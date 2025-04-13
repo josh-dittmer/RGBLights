@@ -1,3 +1,5 @@
+#define GATTLIB_LOG_LEVEL GATTLIB_DEBUG
+
 #include "rgb_lights.h"
 
 #include <csignal>

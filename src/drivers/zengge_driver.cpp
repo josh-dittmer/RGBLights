@@ -13,17 +13,12 @@ bool ZenggeDriver::init() {
 }
 
 void ZenggeDriver::write(uint8_t r, uint8_t g, uint8_t b) {
-    // std::cout << "ENTER" << std::endl;
     std::shared_ptr<hc::bt::Connection> conn_ptr =
         m_scanner.get_connection(m_address);
-    // std::cout << "EXIT" << std::endl;
 
-    if (!conn_ptr) {
-        get_logger().verbose("Write failed, BLE connection not established");
-        return;
+    if (conn_ptr) {
+        conn_ptr->write_char(10);
     }
-
-    conn_ptr->enqueue_char_write(10);
 }
 
-void ZenggeDriver::shutdown() { m_scanner.await_finish_and_cleanup(); }
+void ZenggeDriver::shutdown() { m_scanner.shutdown_sync(); }

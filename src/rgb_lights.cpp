@@ -80,9 +80,19 @@ bool RGBLights::init(const CommandLineArgs& args) {
 }
 
 void RGBLights::shutdown() {
+    std::lock_guard<std::mutex> loop_lock(m_mutex_loop);
+    std::lock_guard<std::mutex> cmd_lock(m_mutex_command);
+
+    if (m_shutting_down) {
+        get_logger().warn("Please wait for process to clean up.");
+        return;
+    }
+
     get_logger().log("Triggering manual shutdown...");
 
     stop();
+
+    m_shutting_down = true;
 }
 
 void RGBLights::set_color(uint8_t r, uint8_t g, uint8_t b,
