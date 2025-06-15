@@ -38,10 +38,12 @@ void PWMZDriver::write(uint8_t r, uint8_t g, uint8_t b) {
         return;
     }
 
+    uint8_t w = (r + g + b) / 3;
+
     gpioPWM(PWM_PIN_R, r);
     gpioPWM(PWM_PIN_G, g);
     gpioPWM(PWM_PIN_B, b);
-    gpioPWM(PWM_PIN_W, 128);
+    gpioPWM(PWM_PIN_W, w);
 }
 void PWMZDriver::shutdown() {
     if (!m_init) {
