@@ -4,7 +4,7 @@ STRUCTURE = $(shell cd $(SRCDIR) && find . -type d)
 DEPSDIR = thirdparty
 
 CXX ?= g++
-CXXFLAGS ?= -g $(shell pkg-config --cflags gio-2.0)
+CXXFLAGS ?= -g
 
 BINARYDIR = bin
 OBJECTDIR = $(BINARYDIR)/obj
@@ -25,7 +25,6 @@ LIBS += -lssl
 LIBS += -lcrypto
 LIBS += -lhomecontroller
 LIBS += -lpigpio
-LIBS += $(shell pkg-config --libs gattlib)
 
 # drivers
 _HEADERS += drivers/driver.h
@@ -35,9 +34,6 @@ _HEADERS += drivers/pwm_driver.h
 
 _OBJECTS += drivers/test_driver.o
 _HEADERS += drivers/test_driver.h
-
-_OBJECTS += drivers/zengge_driver.o
-_HEADERS += drivers/zengge_driver.h
 
 # programs
 _OBJECTS += programs/default_program.o
