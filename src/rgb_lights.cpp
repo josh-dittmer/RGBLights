@@ -1,6 +1,7 @@
 #include "rgb_lights.h"
 
-#include "drivers/pwm_driver.h"
+#include "drivers/pwm_3bp_driver.h"
+#include "drivers/pwm_z_driver.h"
 #include "drivers/test_driver.h"
 #include "programs/default_program.h"
 #include "programs/rainbow_fade_program.h"
@@ -111,7 +112,8 @@ void RGBLights::set_color(uint8_t r, uint8_t g, uint8_t b,
 bool RGBLights::init_driver(const std::string& driver_name) {
     static std::map<std::string, std::function<Driver*()>> str_to_driver = {
         {"TEST", []() { return new TestDriver(); }},
-        {"PWM", []() { return new PWMDriver(); }}};
+        {"PWM_3BP", []() { return new PWM3BPDriver(); }},
+        {"PWM_Z", []() { return new PWMZDriver(); }}};
 
     auto mit = str_to_driver.find(driver_name);
     if (mit == str_to_driver.end()) {
