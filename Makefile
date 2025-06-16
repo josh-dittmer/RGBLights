@@ -29,11 +29,11 @@ LIBS += -lpigpio
 # drivers
 _HEADERS += drivers/driver.h
 
-_OBJECTS += drivers/pwm_3bp_driver.o
-_HEADERS += drivers/pwm_3bp_driver.h
+_OBJECTS += drivers/pwm_strip_driver.o
+_HEADERS += drivers/pwm_strip_driver.h
 
-_OBJECTS += drivers/pwm_z_driver.o
-_HEADERS += drivers/pwm_z_driver.h
+_OBJECTS += drivers/pwm_sunset_driver.o
+_HEADERS += drivers/pwm_sunset_driver.h
 
 _OBJECTS += drivers/test_driver.o
 _HEADERS += drivers/test_driver.h

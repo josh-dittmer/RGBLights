@@ -2,10 +2,10 @@
 
 #include "driver.h"
 
-class PWM3BPDriver : public Driver {
+class PWMSunsetDriver : public Driver {
   public:
-    PWM3BPDriver() : Driver("PWM3BP"), m_init(false) {}
-    ~PWM3BPDriver() {}
+    PWMSunsetDriver() : Driver("PWMSunset"), m_init(false) {}
+    ~PWMSunsetDriver() {}
 
     bool init() override;
     void write(uint8_t r, uint8_t g, uint8_t b) override;
@@ -15,6 +15,7 @@ class PWM3BPDriver : public Driver {
     static const unsigned int PWM_PIN_R;
     static const unsigned int PWM_PIN_G;
     static const unsigned int PWM_PIN_B;
+    static const unsigned int PWM_PIN_W;
 
     bool m_init;
 };

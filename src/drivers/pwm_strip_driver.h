@@ -2,10 +2,10 @@
 
 #include "driver.h"
 
-class PWMZDriver : public Driver {
+class PWMStripDriver : public Driver {
   public:
-    PWMZDriver() : Driver("PWMZ"), m_init(false) {}
-    ~PWMZDriver() {}
+    PWMStripDriver() : Driver("PWMStrip"), m_init(false) {}
+    ~PWMStripDriver() {}
 
     bool init() override;
     void write(uint8_t r, uint8_t g, uint8_t b) override;
@@ -15,7 +15,6 @@ class PWMZDriver : public Driver {
     static const unsigned int PWM_PIN_R;
     static const unsigned int PWM_PIN_G;
     static const unsigned int PWM_PIN_B;
-    static const unsigned int PWM_PIN_W;
 
     bool m_init;
 };

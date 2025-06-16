@@ -1,7 +1,7 @@
 {
     "driver": "TEST",
     "gateway_url": "https://api.hc.jditt.me/api/v1/gateway/",
-    "gateway_namespace": "/",
+    "gateway_namespace": "device",
     "device_id": "<my device's uuidv4>",
     "secret": "<my device's secret>",
     "log_level": "NORMAL",
